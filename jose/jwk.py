@@ -218,8 +218,11 @@ class RSAKey(Key):
 
         e = base64_to_long(jwk_dict.get('e', 256))
         n = base64_to_long(jwk_dict.get('n'))
+        construct_args = [n, e]
+        if 'd' in jwk_dict:
+            construct_args.append(base64_to_long(jwk_dict.get('d')))
 
-        self.prepared_key = RSA.construct((n, e))
+        self.prepared_key = RSA.construct(tuple(construct_args))
         return self.prepared_key
 
     def _process_cert(self, key):
